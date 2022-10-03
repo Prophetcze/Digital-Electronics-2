@@ -12,9 +12,13 @@
 
 /* Defines -----------------------------------------------------------*/
 #define LED_GREEN PB5   // PB5 is AVR pin where green on-board LED 
-#define LED_RED PB0     // PB0 is AVR pin where red LED 
                         // is connected
-#define SHORT_DELAY 250 // Delay in milliseconds
+#define DOT_DELAY   200 // Delay in milliseconds for dot
+#define DASH_DELAY  600 // Delay in milliseconds for dash
+#define SPACE_DELAY 200 // Delay in milliseconds for space between symbols
+#define LET_DELAY   600 // Delay in milliseconds for space between letters
+#define WORDS_DELAY 1400// Delay in milliseconds for space between words
+
 #ifndef F_CPU
 # define F_CPU 16000000 // CPU frequency in Hz required for delay funcs
 #endif
@@ -29,7 +33,6 @@
 // names. We are using Arduino-style just to simplify the first lab.
 #include "Arduino.h"
 #define PB5 13          // In Arduino world, PB5 is called "13"
-#define PB0 8           // In Arduino world, PB0 is called "8"
 // -----
 
 
@@ -45,23 +48,45 @@ int main(void)
 
     // Set pin where on-board LED is connected as output
     pinMode(LED_GREEN, OUTPUT);
-    pinMode(LED_RED, OUTPUT);
 
     // Infinite loop
     while (1)
     {
-        // Turn ON/OFF on-board LED
+        led_value = LOW;
         digitalWrite(LED_GREEN, led_value);
-        digitalWrite(LED_RED, led_value);
+        _delay_ms(LET_DELAY);
 
-        // Pause several milliseconds
-        _delay_ms(SHORT_DELAY);
-
-        // Change LED value
         if (led_value == LOW)
+        {   
             led_value = HIGH;
+            digitalWrite(LED_GREEN, led_value);
+            _delay_ms(DOT_DELAY);
+
+            if (led_value == HIGH)
+            {   
+                led_value = LOW;
+                digitalWrite(LED_GREEN, led_value);
+                _delay_ms(SPACE_DELAY);
+
+                if (led_value == LOW)
+                {   
+                    led_value = HIGH;
+                    digitalWrite(LED_GREEN, led_value);
+                    _delay_ms(DASH_DELAY);
+
+                    if (led_value == HIGH)
+                    {   
+                        led_value = LOW;
+                        digitalWrite(LED_GREEN, led_value);
+                        _delay_ms(SPACE_DELAY);
+                    }
+                }
+            }
+        }
+
         else
             led_value = LOW;
+
     }
 
     // Will never reach this
