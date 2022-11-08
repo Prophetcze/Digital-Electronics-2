@@ -35,6 +35,26 @@
  *           process to UART.
  * Returns:  none
  **********************************************************************/
+
+
+/* Global variables --------------------------------------------------*/
+   // Declaration of "air" variable with structure "Air_parameters_structure"
+   struct Air_parameters_structure {
+       uint8_t humid_int;
+       uint8_t humid_dec;
+       uint8_t temp_int;
+       uint8_t temp_dec;
+       uint8_t checksum;
+   } air;
+
+   // Declaration of "rtc" variable with structure "RTC_parameters_structure"
+   struct RTC_parameters_structure {
+       uint8_t sec;
+       uint8_t min;
+       uint8_t hour;
+   } rtc;
+
+
 int main(void)
 {
     // Initialize I2C (TWI)
@@ -45,7 +65,7 @@ int main(void)
 
     // Configure 16-bit Timer/Counter1 to test one I2C address
     // Set prescaler to 33 ms and enable interrupt
-    TIM1_overflow_33ms();
+    TIM1_overflow_1s();
     TIM1_overflow_interrupt_enable();
 
     // Enables interrupts by setting the global interrupt mask
@@ -77,11 +97,92 @@ ISR(TIMER1_OVF_vect)
     uint8_t ack;              // ACK response from Slave
     char string[3];           // String for converting numbers by itoa()
 
-    // Start communication, transmit I2C Slave address, get result,
-    // and Stop communication
+    // Read temperature and humidity, addr = 0x5c
+    addr = 0x5c;
     ack = twi_start(addr, TWI_WRITE);
-    twi_stop();
+    if(ack == 0)
+    {
+        twi_write(0x00);
+        twi_stop();
+        twi_start(addr, TWI_READ);
 
-    // Test ACK/NACK value obtained from I2C bus and send info to UART
-    
+        air.humid_int = twi_read_ack();
+        air.humid_dec = twi_read_ack();
+        air.temp_int = twi_read_ack();
+        air.temp_dec = twi_read_nack();
+        twi_stop();
+
+        // Print Humidity
+        itoa(air.temp_int, string, 10);
+        uart_puts(string);
+        uart_puts(".");
+        itoa(air.temp_dec, string, 10);
+        uart_puts(string);
+        uart_puts("  °C\t");
+
+        // Print Temperature
+        itoa(air.humid_int, string, 10);
+        uart_puts(string);
+        uart_puts(".");
+        itoa(air.humid_dec, string, 10);
+        uart_puts(string);
+        uart_puts("  %\t"); 
+    }
+
+    // Read RTC, addr = 0x68
+    addr = 0x68;
+    ack = twi_start(addr, TWI_WRITE);
+    if(ack == 0)
+    {
+        twi_write(0x00);
+        twi_stop();
+        twi_start(addr, TWI_READ);
+
+        rtc.sec = twi_read_ack();
+        rtc.min = twi_read_ack();
+        rtc.hour = twi_read_ack();
+        twi_stop();
+
+        // Print Hours
+        itoa(rtc.hour, string, 16);
+        uart_puts(string);
+        uart_puts(":"); 
+
+        // Print Minutes
+        itoa(rtc.min, string, 16);
+        uart_puts(string);
+        uart_puts(":");
+
+        // Print Seconds
+        itoa(rtc.sec, string, 16);
+        uart_puts(string);
+        uart_puts("\r\n");
+    }
+
+/*   
+    // I2C Scanner
+    if(addr < 120)
+    {
+        // Start communication, transmit I2C Slave address, get result,
+        // and Stop communication
+        ack = twi_start(addr, TWI_WRITE);
+        twi_stop();
+
+        itoa(addr, string, 10);
+        uart_puts(string);
+
+        itoa(addr, string, 16);
+        uart_puts("\tHex: ");
+        uart_puts(string);
+
+        if(ack == 0)
+        {
+            uart_puts("\t");
+            uart_puts("OK");
+        }
+        
+        addr++;
+        uart_puts("\r\n");
+    } 
+*/
 }
