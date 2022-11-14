@@ -4,7 +4,7 @@ Use **AVR® Instruction Set Manual** from Microchip [Online Technical Documentat
 
    | **Instruction** | **Operation** | **Description** | **Cycles** |
    | :-- | :-: | :-- | :-: |
-   | `add Rd, Rr` | Rd = Rd + Rr | Add two registers without the C flag and placesthe result in register Rd | 1 |
+   | `add Rd, Rr` | Rd = Rd + Rr | Add two registers without the C flag and places the result in register Rd | 1 |
    | `andi Rd, K` | Rd = Rd and K | Logical AND between register Rd and 8-bit constant K | 1 |
    | `bld Rd, b` | Rd(b) = T | Copies the T bit in the SREG (status register) to bit b in register Rd | 1 |
    | `bst Rd, b` | T = Rd(b) | Stores bit b from Rd to the T bit in SREG (status register) | 1 |
