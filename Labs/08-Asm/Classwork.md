@@ -10,9 +10,9 @@
 
    | **Instruction** | **Binary opcode** | **Hex opcode** | **Compiler Hex opcode** |
    | :-- | :-: | :-- | :-: |
-   | `add r24, r0` |  |  |  |
-   | `mul r22, r20` |  |  |  |
-   | `ret` |  |  |  |
+   | `add r24, r0` |  |  | 800d |
+   | `mul r22, r20` |  |  | 649f |
+   | `ret` |  | 9508 | 0895 |
 
 1. Consider a 4-bit shift register whose input (LSB bit) is formed by an XNOR gate with taps [4, 3] and the initial value is 0000 [[5]](https://www.edn.com/tutorial-linear-feedback-shift-registers-lfsrs-part-1/). Explore LFSR algorithm within `lfsr4_fibonacci_asm` assembly function, complete Timer1 overflow handler and generate 4-bit pseudo-random seguences for different Tap positions. How many states are generated for every settings?
 
