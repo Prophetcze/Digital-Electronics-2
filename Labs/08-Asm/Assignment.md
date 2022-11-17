@@ -5,7 +5,7 @@
 1. Complete the conversion table with selected instructions:
 
    | **Instruction** | **Binary opcode** | **Hex opcode** | **Compiler Hex opcode** |
-   | :-- | :-: | :-- | :-: |
+   | :-- | :-: | :-: | :-: |
    | `add r24, r0` | `0b0000_1101_1000_0000` | `0x0D80` | `0x800D` |
    | `com r26` | `0b1001_0101_1010_0000` | `0x95A0` | `0x0A95` |
    | `eor r26, r27` | `0b0010_0111_1010_1011` | `0x27AB` | `0x72AB` |
